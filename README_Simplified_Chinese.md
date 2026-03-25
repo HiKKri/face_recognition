@@ -44,6 +44,7 @@
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_locations = face_recognition.face_locations(image)
 ```
@@ -56,6 +57,7 @@ face_locations = face_recognition.face_locations(image)
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_landmarks_list = face_recognition.face_landmarks(image)
 ```
@@ -70,6 +72,7 @@ face_landmarks_list = face_recognition.face_landmarks(image)
 
 ```python
 import face_recognition
+
 known_image = face_recognition.load_image_file("biden.jpg")
 unknown_image = face_recognition.load_image_file("unknown.jpg")
 
@@ -90,7 +93,7 @@ results = face_recognition.compare_faces([biden_encoding], unknown_encoding)
 ### 环境配置
 
 - Python 3.3+ or Python 2.7
-- macOS or Linux 
+- macOS or Linux
 - Windows并不是我们官方支持的，但也许也能用
 
 ### 不同操作系统的安装方法
@@ -112,13 +115,13 @@ pip3 install face_recognition
 如果你遇到了幺蛾子，可以用Ubuntu虚拟机安装本项目，看下面这个教程。
 [如何使用Adam Geitgey大神提供的Ubuntu虚拟机镜像文件安装配置虚拟机，本项目已经包含在镜像中](https://medium.com/@ageitgey/try-deep-learning-in-python-now-with-a-fully-pre-configured-vm-1d97d4c3e9b).
 
-#### 在 Mac 或者 Linux上安装本项目 2  
+#### 在 Mac 或者 Linux上安装本项目 2
 
-修改你的pip镜像源为清华镜像，然后使用`pip install face_recognition`,可以自动帮你安装各种依赖，包括dlib。只是在安装dlib的时候可能会出问题，因为dlib需要编译，出现的问题一般是`gcc`或者`g++`版本的问题，所以在`pip install face_recognition`之前，可以通过在命令行键入  
+修改你的pip镜像源为清华镜像，然后使用`pip install face_recognition`,可以自动帮你安装各种依赖，包括dlib。只是在安装dlib的时候可能会出问题，因为dlib需要编译，出现的问题一般是`gcc`或者`g++`版本的问题，所以在`pip install face_recognition`之前，可以通过在命令行键入
 
     export CC=/usr/local/bin/gcc
-    export CXX=/usr/local/bin/g++  
-    
+    export CXX=/usr/local/bin/g++
+
 来指定你gcc和g++对应的位置，（这两句话会临时修改当前终端的环境变量/usr/local/bin/gcc对应你自己gcc或者g++所在目录）。
 
 #### 在树莓派上安装

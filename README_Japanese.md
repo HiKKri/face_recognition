@@ -24,6 +24,7 @@ _このファイルは [英語（オリジナル） in English](https://github.c
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_locations = face_recognition.face_locations(image)
 ```
@@ -35,6 +36,7 @@ face_locations = face_recognition.face_locations(image)
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_landmarks_list = face_recognition.face_landmarks(image)
 ```
@@ -51,6 +53,7 @@ face_landmarks_list = face_recognition.face_landmarks(image)
 
 ```python
 import face_recognition
+
 known_image = face_recognition.load_image_file("biden.jpg")
 unknown_image = face_recognition.load_image_file("unknown.jpg")
 

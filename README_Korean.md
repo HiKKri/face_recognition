@@ -1,6 +1,6 @@
 # Face Recognition
 
-본 문서는 _[중국어 简体中文版](https://github.com/ageitgey/face_recognition/blob/master/README_Simplified_Chinese.md) 로부터 번역되어 한국 사용자들의 기여를 통해 만들어진 문서입니다. 
+본 문서는 _[중국어 简体中文版](https://github.com/ageitgey/face_recognition/blob/master/README_Simplified_Chinese.md) 로부터 번역되어 한국 사용자들의 기여를 통해 만들어진 문서입니다.
 
 본 라이브러리는 세계에서 가장 간단한 얼굴 인식 라이브러리로, Python 또는 명령 줄(CLI)에서 얼굴을 인식하고 조작해 볼 수 있습니다.
 
@@ -23,6 +23,7 @@
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_locations = face_recognition.face_locations(image)
 ```
@@ -35,6 +36,7 @@ face_locations = face_recognition.face_locations(image)
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_landmarks_list = face_recognition.face_landmarks(image)
 ```
@@ -43,7 +45,7 @@ face_landmarks_list = face_recognition.face_landmarks(image)
 
 ![](https://cloud.githubusercontent.com/assets/896692/23625283/80638760-025d-11e7-80a2-1d2779f7ccab.png)
 
-#### 사진 속 얼굴의 신원 확인하기 
+#### 사진 속 얼굴의 신원 확인하기
 
 각각의 사진에서 누가 등장하였는지 인식합니다.
 
@@ -51,6 +53,7 @@ face_landmarks_list = face_recognition.face_landmarks(image)
 
 ```python
 import face_recognition
+
 known_image = face_recognition.load_image_file("biden.jpg")
 unknown_image = face_recognition.load_image_file("unknown.jpg")
 
@@ -158,7 +161,7 @@ examples/image2.jpg,95,941,244,792
 ```
 
 감지된 각 얼굴에 대해 한 줄씩 인쇄합니다. 결과값의 좌표는 각각 얼굴의 위쪽, 오른쪽, 아래쪽 및 왼쪽 좌표 (픽셀 단위)입니다.
- 
+
 ##### 오차 조절 / 민감도
 
 같은 사람에 대해 여러 개의 항목을 얻었다면, 사진에 있는 사람들이 매우 유사하게 보이기 때문이며 더욱 엄격한 얼굴 비교를 위해 낮은 허용치(tolerance value)가 필요합니다.
@@ -262,7 +265,7 @@ import face_recognition
 picture_of_me = face_recognition.load_image_file("me.jpg")
 my_face_encoding = face_recognition.face_encodings(picture_of_me)[0]
 
-# my_face_encoding은 이제 어느 얼굴과도 비교할 수 있는 내가 가진 얼굴 특징의 보편적인 인코딩을 포함하게 되었습니다. 
+# my_face_encoding은 이제 어느 얼굴과도 비교할 수 있는 내가 가진 얼굴 특징의 보편적인 인코딩을 포함하게 되었습니다.
 
 unknown_picture = face_recognition.load_image_file("unknown.jpg")
 unknown_face_encoding = face_recognition.face_encodings(unknown_picture)[0]

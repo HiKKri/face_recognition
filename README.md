@@ -27,6 +27,7 @@ Find all the faces that appear in a picture:
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_locations = face_recognition.face_locations(image)
 ```
@@ -39,6 +40,7 @@ Get the locations and outlines of each person's eyes, nose, mouth and chin.
 
 ```python
 import face_recognition
+
 image = face_recognition.load_image_file("your_file.jpg")
 face_landmarks_list = face_recognition.face_landmarks(image)
 ```
@@ -56,6 +58,7 @@ Recognize who appears in each photo.
 
 ```python
 import face_recognition
+
 known_image = face_recognition.load_image_file("biden.jpg")
 unknown_image = face_recognition.load_image_file("unknown.jpg")
 
@@ -89,9 +92,9 @@ User-contributed shared Jupyter notebook demo (not officially supported): [![Dee
 First, make sure you have dlib already installed with Python bindings:
 
   * [How to install dlib from source on macOS or Ubuntu](https://gist.github.com/ageitgey/629d75c1baac34dfa5ca2a1928a7aeaf)
-  
-Then, make sure you have cmake installed:  
- 
+
+Then, make sure you have cmake installed:
+
 ```brew install cmake```
 
 Finally, install this module from pypi using `pip3` (or `pip2` for Python 2):
@@ -134,16 +137,16 @@ While Windows isn't officially supported, helpful users have posted instructions
 
 ### Command-Line Interface
 
-When you install `face_recognition`, you get two simple command-line 
+When you install `face_recognition`, you get two simple command-line
 programs:
 
-* `face_recognition` - Recognize faces in a photograph or folder full for 
+* `face_recognition` - Recognize faces in a photograph or folder full for
    photographs.
 * `face_detection` - Find faces in a photograph or folder full for photographs.
 
 #### `face_recognition` command line tool
 
-The `face_recognition` command lets you recognize faces in a photograph or 
+The `face_recognition` command lets you recognize faces in a photograph or
 folder full  for photographs.
 
 First, you need to provide a folder with one picture of each person you
@@ -175,10 +178,10 @@ your folder of known people.
 
 #### `face_detection` command line tool
 
-The `face_detection` command lets you find the location (pixel coordinatates) 
+The `face_detection` command lets you find the location (pixel coordinatates)
 of any faces in an image.
 
-Just run the command `face_detection`, passing in a folder of images 
+Just run the command `face_detection`, passing in a folder of images
 to check (or a single image):
 
 ```bash
@@ -191,7 +194,7 @@ examples/image2.jpg,95,941,244,792
 
 It prints one line for each face that was detected. The coordinates
 reported are the top, right, bottom and left coordinates of the face (in pixels).
- 
+
 ##### Adjusting Tolerance / Sensitivity
 
 If you are getting multiple matches for the same person, it might be that

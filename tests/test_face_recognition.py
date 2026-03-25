@@ -13,33 +13,122 @@ import unittest
 import os
 import numpy as np
 from click.testing import CliRunner
+from PIL import Image, ImageDraw
+import sys
 
 from face_recognition import api
 from face_recognition import face_recognition_cli
 from face_recognition import face_detection_cli
-
+import face_recognition_models
 
 class Test_face_recognition(unittest.TestCase):
 
+    def test_01(self):
+        print(sys.executable) #E:\www\devCoding\py\my_face_recognition_project\venv_py312\Scripts\python.exe
+        print(sys.path)# ['E:\\www\\devCoding\\py\\my_face_recognition_project\\tests', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\pydev', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\third_party\\thriftpy', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\pydev', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\pycharm', 'E:\\www\\devCoding\\py\\my_face_recognition_project', 'E:\\www\\devCoding\\py\\my_face_recognition_project\\venv_py312', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\pycharm_display', 'C:\\Users\\Administrator\\AppData\\Local\\JetBrains\\PyCharm2024.2\\cythonExtensions', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python\\helpers-pro\\pydevd_asyncio', 'E:\\www\\devCoding\\py\\my_face_recognition_project\\tests', 'E:\\www\\pythonDevNew12\\python312.zip', 'E:\\www\\pythonDevNew12\\DLLs', 'E:\\www\\pythonDevNew12\\Lib', 'E:\\www\\pythonDevNew12', 'E:\\www\\devCoding\\py\\my_face_recognition_project\\venv_py312\\Lib\\site-packages', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\pycharm_matplotlib_backend', 'D:\\java\\PyCharm\\PyCharm 2024.2.3\\plugins\\python-ce\\helpers\\pycharm_plotly_backend']
+        print(os.path.dirname(face_recognition_models.__file__)) #E:\www\devCoding\py\my_face_recognition_project\venv_py312\Lib\site-packages\face_recognition_models
+
+
+        # 检查 models 子目录是否存在
+        # models_dir = os.path.join(os.path.dirname(face_recognition_models.__file__), "models")
+        # print(os.listdir(models_dir))
+        # 应包含：['shape_predictor_68_face_landmarks.dat', 'dlib_face_recognition_resnet_model_v1.dat', ...]
+
+    #载入图片
     def test_load_image_file(self):
+        # --- Add these lines to verify the environment ---
+        print("--- In Test Script: Python Executable ---")
+        print(sys.executable)
+        print("--- In Test Script: Python Version ---")
+        print(sys.version_info)
+        # ----------------------------------------------
         img = api.load_image_file(os.path.join(os.path.dirname(__file__), 'test_images', 'obama.jpg'))
         self.assertEqual(img.shape, (1137, 910, 3))
 
+    # 载入32位图片
     def test_load_image_file_32bit(self):
         img = api.load_image_file(os.path.join(os.path.dirname(__file__), 'test_images', '32bit.png'))
         self.assertEqual(img.shape, (1200, 626, 3))
 
     def test_raw_face_locations(self):
         img = api.load_image_file(os.path.join(os.path.dirname(__file__), 'test_images', 'obama.jpg'))
+        print(f"Image shape: {img.shape}")
+        print(f"Image dtype: {img.dtype}")
+        print(f"Min pixel: {img.min()}, Max pixel: {img.max()}")
         detected_faces = api._raw_face_locations(img)
 
         self.assertEqual(len(detected_faces), 1)
         self.assertEqual(detected_faces[0].top(), 142)
         self.assertEqual(detected_faces[0].bottom(), 409)
+    #该函数扫描输入的图像 img，并返回图像中检测到的所有人脸的边界框（bounding box）坐标
+    #img: (必需) 输入的图像。通常是一个 numpy 数组 (ndarray)，代表 RGB 格式的图像。
+    #number_of_times_to_upsample: (可选, 默认为 1)这个参数决定了在检测前对图像进行上采样（放大）的次数。上采样有助于检测较小的人脸/值为 0 意味着图像大小不变。值为 1 将使图像大小增加 2 倍（面积变为 4 倍）。值为 2 将使图像大小增加 4 倍（面积变为 16 倍），以此类推。
+    #model: (可选, 默认为 'hog')  'hog': 使用方向梯度直方图 (Histogram of Oriented Gradients) 特征和支持向量机 (SVM) 分类器。这个模型速度较快，对光线变化不太敏感，但在 CPU 上运行效果好/'cnn': 使用卷积神经网络 (Convolutional Neural Network) 模型。这个模型更准确，尤其是对于姿态变化较大的人脸，但它需要 GPU 加速才能获得合理速度，否则会非常慢。
+    def test_hog_raw_face_locations(self):
+        img_path = os.path.join(os.path.dirname(__file__), 'test_images', 'obama.jpg')
+        # 使用 PIL 打开图像，并确保它是一个标准的 RGB 模式
+        with Image.open(img_path) as pil_img:
+            # 转换为 RGB 模式（如果原图是 RGBA, L 等，会强制转换为 RGB）
+            rgb_pil_img = pil_img.convert('RGB')
 
-    def test_cnn_raw_face_locations(self):
-        img = api.load_image_file(os.path.join(os.path.dirname(__file__), 'test_images', 'obama.jpg'))
-        detected_faces = api._raw_face_locations(img, model="cnn")
+            # 转换为 numpy 数组
+            img = np.array(rgb_pil_img)
+
+        # 2. 验证图像数据
+        print("Image dtype after conversion:", img.dtype)
+        print("Image shape after conversion:", img.shape)
+        print("Is contiguous?", img.flags['C_CONTIGUOUS'])  # 检查数组是否在内存中连续
+
+        # 3. 确保数组是连续的（dlib 经常需要连续的内存布局）
+        if not img.flags['C_CONTIGUOUS']:
+            print("Converting to contiguous array...")
+            img = np.ascontiguousarray(img)
+        # 确保图像只有3个通道
+        if img.shape[2] > 3:
+            img = img[:, :, :3]
+        # 4. 使用 face_recognition 的公共接口检测人脸
+        # 注意：这里我们不再使用内部的 _raw_face_locations
+        detected_faces = api.face_locations(img, model="hog")
+        print(f"检测到 {len(detected_faces)} 张人脸")
+
+        # 5. 创建一个 Pillow 图像对象以便绘制
+        pil_image = Image.fromarray(img)
+        draw = ImageDraw.Draw(pil_image)
+
+        # 6. 遍历检测到的人脸并画出矩形框
+        for face_location in detected_faces:
+            top, right, bottom, left = face_location
+            print(f"人脸位置: Top={top}, Right={right}, Bottom={bottom}, Left={left}")
+            draw.rectangle(((left, top), (right, bottom)), outline="red", width=3)
+
+
+        # 第二种
+        # img = api.load_image_file(os.path.join(os.path.dirname(__file__), 'test_images', 'obama.jpg'))
+        # # 确保是 8-bit uint8 格式
+        # print("Image dtype:", img.dtype)  # 应输出: uint8
+        # print("Image shape:", img.shape)  # 应输出: (height, width, 3) —— RGB
+        # # 使用 raw_face_locations 获取人脸位置
+        # detected_faces = api.face_locations(img, model="hog")
+        # print(f"检测到 {len(detected_faces)} 张人脸")
+        # # 创建一个 Pillow 图像对象以便绘制
+        # pil_image = Image.fromarray(img)
+        # draw = ImageDraw.Draw(pil_image)
+        #
+        # # 遍历检测到的人脸并画出矩形框
+        # for rect in detected_faces:
+        #     # 获取坐标
+        #     top = rect.top()
+        #     right = rect.right()
+        #     bottom = rect.bottom()
+        #     left = rect.left()
+        #
+        #     print(f"人脸位置: Top={top}, Right={right}, Bottom={bottom}, Left={left}")
+        #
+        #     # 在图像上绘制矩形框
+        #     draw.rectangle(((left, top), (right, bottom)), outline="red", width=3)
+        #
+        # # 显示结果
+        # pil_image.show()
 
         self.assertEqual(len(detected_faces), 1)
         self.assertAlmostEqual(detected_faces[0].rect.top(), 144, delta=25)
